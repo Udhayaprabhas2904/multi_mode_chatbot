@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <meta
+        name="description"
+        content="Multi-Mode RAG Assistant with Sales Assistant and AI Tutor"
+    >
+
+    <title>Multi-Mode RAG Assistant</title>
+
+    <link
+        rel="stylesheet"
+        href="/static/style.css"
+    >
+</head>
+
+<body>
+
+<div class="app-shell">
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header class="top-header">
+
+        <div class="brand">
+
+            <div class="brand-logo">
+                ✦
+            </div>
+
+            <div class="brand-text">
+
+                <h1>
+                    Multi-Mode RAG Assistant
+                </h1>
+
+                <p>
+                    Sales Assistant
+                    <span>•</span>
+                    AI Tutor
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="header-actions">
+
+            <button
+                id="themeBtn"
+                class="icon-btn"
+                title="Toggle theme"
+                type="button"
+            >
+                ☼
+            </button>
+
+
+            <button
+                class="profile-btn"
+                title="Profile"
+                type="button"
+            >
+                👤
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         MAIN WORKSPACE
+    ====================================================== -->
+
+    <div class="workspace">
+
+
+        <!-- =================================================
+             LEFT SIDEBAR
+        ================================================== -->
+
+        <aside class="left-sidebar">
+
+
+            <!-- =================================================
+                 MODE SETTINGS
+            ================================================== -->
+
+            <section class="panel mode-panel">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <h2>
+                            Mode Settings
+                        </h2>
+
+                        <p>
+                            Choose the assistant mode
+                        </p>
+
+                    </div>
+
+                    <span class="heading-icon">
+                        ☷
+                    </span>
+
+                </div>
+
+
+                <!-- SALES MODE -->
+
+                <button
+                    id="salesModeBtn"
+                    class="mode-card active"
+                    onclick="setMode('sales')"
+                    type="button"
+                >
+
+                    <span class="mode-symbol sales-symbol">
+                        ▣
+                    </span>
+
+                    <span class="mode-copy">
+
+                        <strong>
+                            Sales
+                        </strong>
+
+                        <small>
+                            Sales Management Assistant
+                        </small>
+
+                    </span>
+
+                    <span class="mode-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <!-- AI TUTOR MODE -->
+
+                <button
+                    id="tutorModeBtn"
+                    class="mode-card"
+                    onclick="setMode('tutor')"
+                    type="button"
+                >
+
+                    <span class="mode-symbol tutor-symbol">
+                        ◆
+                    </span>
+
+                    <span class="mode-copy">
+
+                        <strong>
+                            AI Tutor
+                        </strong>
+
+                        <small>
+                            Teacher & Tutor Assistant
+                        </small>
+
+                    </span>
+
+                    <span class="mode-arrow">
+                        ›
+                    </span>
+
+                </button>
+
+
+                <!-- ACTIVE MODE -->
+
+                <div class="active-mode">
+
+                    <div>
+
+                        <span>
+                            Active Mode
+                        </span>
+
+                        <strong id="activeModeLabel">
+                            Sales
+                        </strong>
+
+                    </div>
+
+                    <span class="ready-badge">
+                        Ready
+                    </span>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 UPLOAD PDF
+            ================================================== -->
+
+            <section class="panel upload-panel">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <h2>
+                            Upload PDF
+                        </h2>
+
+                        <p>
+                            Maximum file size: 1 GB
+                        </p>
+
+                    </div>
+
+                    <span class="heading-icon">
+                        ⇧
+                    </span>
+
+                </div>
+
+
+                <!-- DROP ZONE -->
+
+                <div
+                    id="dropZone"
+                    class="drop-zone"
+                >
+
+                    <div class="cloud-icon">
+                        ☁
+                    </div>
+
+                    <h3>
+                        Drag & drop your PDF
+                    </h3>
+
+                    <p>
+                        or
+                    </p>
+
+
+                    <label
+                        for="pdfFile"
+                        class="choose-btn"
+                    >
+                        Choose File
+                    </label>
+
+
+                    <input
+                        id="pdfFile"
+                        type="file"
+                        accept=".pdf,application/pdf"
+                        hidden
+                        onchange="handleFileSelect(event)"
+                    >
+
+
+                    <small>
+                        PDF only
+                        <span>•</span>
+                        Max size: 1 GB
+                    </small>
+
+
+                    <div
+                        id="selectedFile"
+                        class="selected-file hidden"
+                    >
+                    </div>
+
+                </div>
+
+
+                <!-- DOCUMENT TYPE -->
+
+                <div class="field">
+
+                    <label for="uploadMode">
+                        Document Type
+                    </label>
+
+                    <select id="uploadMode">
+
+                        <option value="sales">
+                            ▣ Sales Documents
+                        </option>
+
+                        <option value="tutor">
+                            ◆ Education Documents
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- UPLOAD BUTTON -->
+
+                <button
+                    id="uploadBtn"
+                    class="primary-btn"
+                    onclick="uploadPDF()"
+                    type="button"
+                >
+
+                    <span>
+                        ⇧
+                    </span>
+
+                    Upload & Index PDF
+
+                </button>
+
+
+                <!-- UPLOAD STATUS -->
+
+                <div
+                    id="uploadStatus"
+                    class="upload-status"
+                >
+                </div>
+
+
+                <!-- INFORMATION -->
+
+                <div class="info-note">
+
+                    <span>
+                        i
+                    </span>
+
+                    <p>
+                        After uploading and indexing a PDF,
+                        chat will be activated.
+                    </p>
+
+                </div>
+
+            </section>
+
+
+
+            <!-- =================================================
+                 UPLOADED DOCUMENTS
+            ================================================== -->
+
+            <section class="panel documents-panel">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <h2>
+                            Uploaded Documents
+                        </h2>
+
+                        <p>
+                            Your RAG knowledge base
+                        </p>
+
+                    </div>
+
+                    <span class="heading-icon">
+                        ▤
+                    </span>
+
+                </div>
+
+
+                <div
+                    id="uploadedDocuments"
+                    class="documents-list"
+                >
+
+                    <div class="empty-docs">
+
+                        <span>
+                            □
+                        </span>
+
+                        <p>
+                            No documents uploaded yet.
+                        </p>
+
+                        <small>
+                            Upload a PDF to activate chat.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+
+
+        <!-- =================================================
+             CHAT AREA
+        ================================================== -->
+
+        <main class="chat-panel">
+
+
+            <!-- CHAT HEADER -->
+
+            <div class="chat-header">
+
+                <div class="chat-title">
+
+                    <div class="chat-icon">
+                        ⌁
+                    </div>
+
+                    <div>
+
+                        <h2>
+                            Chat
+                        </h2>
+
+                        <p id="chatSubtitle">
+                            Upload a PDF to start chatting
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="chatStatus"
+                    class="chat-status inactive"
+                >
+
+                    <span class="status-dot">
+                    </span>
+
+                    <span id="chatStatusText">
+                        Chat inactive
+                    </span>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CHAT MESSAGES
+            ================================================== -->
+
+            <div
+                id="chatMessages"
+                class="chat-messages"
+            >
+
+                <!-- EMPTY STATE -->
+
+                <div
+                    id="emptyChat"
+                    class="empty-chat"
+                >
+
+                    <div class="pdf-illustration">
+
+                        <div class="pdf-page">
+                            PDF
+                        </div>
+
+                        <div class="upload-bubble">
+                            ↑
+                        </div>
+
+                    </div>
+
+
+                    <h2>
+                        Upload a PDF to Start Chatting
+                    </h2>
+
+
+                    <p>
+
+                        Your selected mode will be activated
+                        after indexing.
+
+                        <br>
+
+                        Ask questions and get answers
+                        from your knowledge base.
+
+                    </p>
+
+
+                    <!-- MODE INFORMATION -->
+
+                    <div class="mode-info-grid">
+
+
+                        <!-- SALES -->
+
+                        <div class="mode-info sales-info">
+
+                            <div class="info-icon">
+                                ▣
+                            </div>
+
+                            <h3>
+                                Sales Mode
+                            </h3>
+
+                            <ul>
+
+                                <li>
+                                    Product details & features
+                                </li>
+
+                                <li>
+                                    Pricing information
+                                </li>
+
+                                <li>
+                                    Customer queries
+                                </li>
+
+                                <li>
+                                    Sales policies & procedures
+                                </li>
+
+                                <li>
+                                    Recommendations & comparisons
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+
+                        <!-- AI TUTOR -->
+
+                        <div class="mode-info tutor-info">
+
+                            <div class="info-icon">
+                                ◆
+                            </div>
+
+                            <h3>
+                                AI Tutor Mode
+                            </h3>
+
+                            <ul>
+
+                                <li>
+                                    Explain concepts
+                                </li>
+
+                                <li>
+                                    Create notes & summaries
+                                </li>
+
+                                <li>
+                                    Give examples
+                                </li>
+
+                                <li>
+                                    Step-by-step explanations
+                                </li>
+
+                                <li>
+                                    Practice questions & revision
+                                </li>
+
+                            </ul>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- =================================================
+                 CHAT COMPOSER
+            ================================================== -->
+
+            <div class="composer">
+
+
+                <!-- MODE SELECTOR -->
+
+                <div class="composer-mode-wrap">
+
+                    <button
+                        id="inputModeButton"
+                        class="input-mode-btn"
+                        onclick="toggleModeMenu()"
+                        type="button"
+                    >
+
+                        <span id="inputModeIcon">
+                            ▣
+                        </span>
+
+                        <span id="inputModeText">
+                            Sales
+                        </span>
+
+                        <span>
+                            ⌄
+                        </span>
+
+                    </button>
+
+
+                    <!-- MODE MENU -->
+
+                    <div
+                        id="modeMenu"
+                        class="mode-menu hidden"
+                    >
+
+                        <button
+                            onclick="setMode('sales'); toggleModeMenu()"
+                            type="button"
+                        >
+                            ▣ Sales
+                        </button>
+
+                        <button
+                            onclick="setMode('tutor'); toggleModeMenu()"
+                            type="button"
+                        >
+                            ◆ AI Tutor
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- MESSAGE BOX -->
+
+                <div class="message-box">
+
+                    <input
+                        id="messageInput"
+                        type="text"
+                        placeholder="Upload a PDF to activate chat..."
+                        disabled
+                        autocomplete="off"
+                        onkeydown="handleKey(event)"
+                    >
+
+
+                    <button
+                        id="sendButton"
+                        onclick="sendMessage()"
+                        disabled
+                        title="Send message"
+                        type="button"
+                    >
+                        ➤
+                    </button>
+
+                </div>
+
+            </div>
+
+        </main>
+
+
+
+        <!-- =================================================
+             RIGHT INFORMATION PANEL
+        ================================================== -->
+
+        <aside class="right-sidebar">
+
+            <section class="panel info-panel">
+
+
+                <!-- PANEL HEADER -->
+
+                <div class="panel-heading">
+
+                    <div class="info-title">
+
+                        <span class="big-heading-icon">
+                            ▤
+                        </span>
+
+                        <h2>
+                            Information Panel
+                        </h2>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     KEY FEATURES
+                ================================================== -->
+
+                <div class="info-section">
+
+                    <h3>
+                        Key Features
+                    </h3>
+
+
+                    <!-- FEATURE 1 -->
+
+                    <div class="feature">
+
+                        <span class="feature-icon green">
+                            ✓
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                RAG-based responses
+                            </strong>
+
+                            <p>
+                                Answers grounded in your
+                                uploaded documents.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FEATURE 2 -->
+
+                    <div class="feature">
+
+                        <span class="feature-icon purple">
+                            ↔
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Switch modes anytime
+                            </strong>
+
+                            <p>
+                                Change between Sales and
+                                AI Tutor in the same chat.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FEATURE 3 -->
+
+                    <div class="feature">
+
+                        <span class="feature-icon blue">
+                            ☁
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Large PDF support
+                            </strong>
+
+                            <p>
+                                Upload PDFs up to 1 GB.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FEATURE 4 -->
+
+                    <div class="feature">
+
+                        <span class="feature-icon orange">
+                            ⌕
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Source-aware answers
+                            </strong>
+
+                            <p>
+                                Responses can reference
+                                retrieved document content.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     HOW IT WORKS
+                ================================================== -->
+
+                <div class="info-section how-section">
+
+                    <h3>
+                        How It Works
+                    </h3>
+
+
+                    <div class="step">
+
+                        <span>
+                            1
+                        </span>
+
+                        <p>
+
+                            Upload your PDF
+
+                            <br>
+
+                            <small>
+                                Max 1 GB
+                            </small>
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="step">
+
+                        <span>
+                            2
+                        </span>
+
+                        <p>
+                            Wait for indexing to complete
+                        </p>
+
+                    </div>
+
+
+                    <div class="step">
+
+                        <span>
+                            3
+                        </span>
+
+                        <p>
+                            Choose Sales or AI Tutor
+                        </p>
+
+                    </div>
+
+
+                    <div class="step">
+
+                        <span>
+                            4
+                        </span>
+
+                        <p>
+                            Start chatting
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- =================================================
+                     TIP
+                ================================================== -->
+
+                <div class="tip-box">
+
+                    <span>
+                        ✧
+                    </span>
+
+                    <div>
+
+                        <strong>
+                            Tip
+                        </strong>
+
+                        <p>
+
+                            You can switch between Sales
+                            and AI Tutor anytime without
+                            starting a new chat.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </aside>
+
+    </div>
+
+</div>
+
+
+<script src="/static/app.js"></script>
+
+</body>
+
+</html>
