@@ -4,13 +4,26 @@ from app.agents.sales_agent import sales_agent
 from app.agents.tutor_agent import tutor_agent
 
 
+# Maximum number of documents sent to the LLM.
+# Keeping this small helps reduce API usage.
+TOP_K_DOCUMENTS = 3
+
+# Maximum characters taken from each retrieved document.
+# This prevents unnecessarily large prompts.
+MAX_CHARS_PER_DOCUMENT = 4000
+
+
 def query_analyzer(state):
     """
     Analyze and prepare the user's query.
+
+    For now, the query is passed through unchanged.
     """
 
+    query = state.get("query", "").strip()
+
     return {
-        "rewritten_query": state["query"]
+        "rewritten_query": query
     }
 
 
@@ -19,16 +32,33 @@ def document_retriever(state):
     Retrieve relevant documents based on:
     - rewritten query
     - selected mode
+
+    The selected mode is important because:
+        sales -> only sales documents
+        tutor -> only tutor documents
     """
 
-    query = state["rewritten_query"]
+    query = state.get(
+        "rewritten_query",
+        ""
+    ).strip()
 
-    mode = state["mode"]
+    mode = state.get("mode")
+
+    if not query:
+        return {
+            "retrieved_documents": []
+        }
+
+    if mode not in {"sales", "tutor"}:
+        raise ValueError(
+            "Invalid mode. Use 'sales' or 'tutor'."
+        )
 
     documents = retrieve_documents(
         query=query,
         mode=mode,
-        k=5,
+        k=TOP_K_DOCUMENTS,
     )
 
     return {
@@ -40,6 +70,8 @@ def context_builder(state):
     """
     Build the context that will be provided
     to the Sales Assistant or AI Tutor.
+
+    Only retrieved documents are included.
     """
 
     documents = state.get(
@@ -63,16 +95,23 @@ def context_builder(state):
             "Unknown"
         )
 
+        content = document.page_content or ""
+
+        # Limit the amount of text sent to the LLM.
+        content = content[:MAX_CHARS_PER_DOCUMENT]
+
         context_parts.append(
             f"""
 Source: {source}
 Page: {page}
 
-{document.page_content}
+{content}
 """
         )
 
-    context = "\n\n".join(context_parts)
+    context = "\n\n".join(
+        context_parts
+    ).strip()
 
     return {
         "context": context
@@ -86,7 +125,10 @@ def sales_node(state):
 
     response = sales_agent(
         query=state["query"],
-        context=state["context"],
+        context=state.get(
+            "context",
+            ""
+        ),
         chat_history=state.get(
             "chat_history",
             []
@@ -105,7 +147,10 @@ def tutor_node(state):
 
     response = tutor_agent(
         query=state["query"],
-        context=state["context"],
+        context=state.get(
+            "context",
+            ""
+        ),
         chat_history=state.get(
             "chat_history",
             []
@@ -121,8 +166,9 @@ def response_validator(state):
     """
     Validate and normalize the generated response.
 
-    Gemini/LangChain can sometimes return response
-    content as a list instead of a plain string.
+    LangChain model responses can sometimes contain
+    different content formats. This converts them
+    into a normal string.
     """
 
     response = state.get(
@@ -158,7 +204,9 @@ def response_validator(state):
                         str(item["content"])
                     )
 
-        response = "\n".join(text_parts)
+        response = "\n".join(
+            text_parts
+        )
 
     # -------------------------------------------------
     # Case 2: Response is None

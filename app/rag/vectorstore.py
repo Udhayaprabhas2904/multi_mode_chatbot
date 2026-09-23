@@ -1,5 +1,4 @@
 import os
-import time
 
 from dotenv import load_dotenv
 from langchain_postgres import PGVector
@@ -7,16 +6,11 @@ from langchain_postgres import PGVector
 from app.rag.embeddings import get_embeddings
 
 
-# ---------------------------------------------------------
-# Load environment variables
-# ---------------------------------------------------------
+# =========================================================
+# LOAD ENVIRONMENT VARIABLES
+# =========================================================
 
 load_dotenv()
-
-
-# ---------------------------------------------------------
-# Database configuration
-# ---------------------------------------------------------
 
 DATABASE_URL = os.getenv("DATABASE_URL")
 
@@ -26,23 +20,32 @@ if not DATABASE_URL:
     )
 
 
-# ---------------------------------------------------------
-# Vector collection name
-# ---------------------------------------------------------
+# =========================================================
+# VECTOR COLLECTION
+# =========================================================
 
-COLLECTION_NAME = "multi_mode_documents"
+COLLECTION_NAME = "multi_mode_documents_local"
 
 
-# ---------------------------------------------------------
-# Create / connect to PGVector
-# ---------------------------------------------------------
+# =========================================================
+# GET VECTORSTORE
+# =========================================================
 
 def get_vectorstore():
-    """
-    Create a connection to PostgreSQL + pgvector.
-    """
 
-    print("Connecting to PostgreSQL + pgvector...")
+    print()
+    print("=" * 60)
+    print("CONNECTING TO POSTGRESQL + PGVECTOR")
+    print("=" * 60)
+
+    print(
+        f"Collection: {COLLECTION_NAME}"
+    )
+
+    print(
+        "Embedding model: "
+        "sentence-transformers/all-MiniLM-L6-v2"
+    )
 
     vectorstore = PGVector(
         embeddings=get_embeddings(),
@@ -51,67 +54,67 @@ def get_vectorstore():
         use_jsonb=True,
     )
 
-    print("PostgreSQL + pgvector connection ready.")
+    print(
+        "PostgreSQL + pgvector connection ready."
+    )
+
+    print("=" * 60)
 
     return vectorstore
 
 
-# ---------------------------------------------------------
-# Add documents to vector database
-# ---------------------------------------------------------
+# =========================================================
+# ADD DOCUMENTS
+# =========================================================
 
 def add_documents(
     documents,
     mode,
     source,
+    document_id,
     batch_size=25,
 ):
-    """
-    Embed documents and store them in PostgreSQL + pgvector.
-
-    Parameters
-    ----------
-    documents:
-        List of LangChain Document objects.
-
-    mode:
-        Either "sales" or "tutor".
-
-    source:
-        Original PDF filename.
-
-    batch_size:
-        Number of chunks processed per batch.
-    """
-
-    # -----------------------------------------------------
-    # Validate documents
-    # -----------------------------------------------------
 
     if not documents:
         raise ValueError(
             "No documents were provided for indexing."
         )
 
-
-    # -----------------------------------------------------
-    # Validate mode
-    # -----------------------------------------------------
-
     if mode not in {"sales", "tutor"}:
         raise ValueError(
-            "Invalid mode. Mode must be 'sales' or 'tutor'."
+            "Invalid mode. "
+            "Mode must be 'sales' or 'tutor'."
         )
 
+    if not document_id:
+        raise ValueError(
+            "document_id is required for indexing."
+        )
 
-    # -----------------------------------------------------
-    # Add metadata
-    # -----------------------------------------------------
+    document_id = str(document_id)
 
-    print(
-        f"Preparing {len(documents)} documents "
-        f"for vector storage..."
-    )
+    if not source:
+        raise ValueError(
+            "source is required for indexing."
+        )
+
+    print()
+    print("=" * 60)
+    print("PREPARING DOCUMENTS FOR VECTOR STORAGE")
+    print("=" * 60)
+
+    print(f"Documents   : {len(documents)}")
+    print(f"Mode        : {mode}")
+    print(f"Source      : {source}")
+    print(f"Document ID : {document_id}")
+    print(f"Collection  : {COLLECTION_NAME}")
+
+    print("=" * 60)
+
+
+    # =====================================================
+    # ADD METADATA
+    # =====================================================
 
     for document in documents:
 
@@ -120,18 +123,65 @@ def add_documents(
 
         document.metadata["mode"] = mode
         document.metadata["source"] = source
+        document.metadata["document_id"] = document_id
 
 
-    # -----------------------------------------------------
-    # Create vector store
-    # -----------------------------------------------------
+    # =====================================================
+    # CREATE VECTORSTORE
+    # =====================================================
 
     vectorstore = get_vectorstore()
 
 
-    # -----------------------------------------------------
-    # Batch calculation
-    # -----------------------------------------------------
+    # =====================================================
+    # PREVENT DUPLICATE DOCUMENT ID
+    # =====================================================
+
+    try:
+
+        existing = vectorstore.similarity_search(
+            documents[0].page_content,
+            k=20,
+            filter={
+                "document_id": document_id
+            }
+        )
+
+        if existing:
+
+            print()
+            print("=" * 60)
+            print("DUPLICATE DOCUMENT DETECTED")
+            print("=" * 60)
+
+            print(
+                f"Document ID already exists: "
+                f"{document_id}"
+            )
+
+            print(
+                "Skipping vector indexing."
+            )
+
+            print("=" * 60)
+
+            return
+
+    except Exception as error:
+
+        print(
+            "Duplicate check warning:",
+            str(error)
+        )
+
+        print(
+            "Continuing with indexing..."
+        )
+
+
+    # =====================================================
+    # CALCULATE BATCHES
+    # =====================================================
 
     total = len(documents)
 
@@ -140,17 +190,29 @@ def add_documents(
         // batch_size
     )
 
+    print()
+    print(
+        f"Total documents : {total}"
+    )
 
-    print(f"Total documents: {total}")
-    print(f"Batch size: {batch_size}")
-    print(f"Total batches: {total_batches}")
+    print(
+        f"Batch size      : {batch_size}"
+    )
+
+    print(
+        f"Total batches   : {total_batches}"
+    )
 
 
-    # -----------------------------------------------------
-    # Process batches
-    # -----------------------------------------------------
+    # =====================================================
+    # PROCESS BATCHES
+    # =====================================================
 
-    for start in range(0, total, batch_size):
+    for start in range(
+        0,
+        total,
+        batch_size
+    ):
 
         end = min(
             start + batch_size,
@@ -163,182 +225,101 @@ def add_documents(
             start // batch_size
         ) + 1
 
-
         print()
-       
+        print("-" * 60)
+
         print(
             f"Embedding batch "
             f"{batch_number}/{total_batches}"
         )
+
         print(
             f"Documents: "
             f"{start + 1}-{end} of {total}"
         )
-        
+
+        print(
+            f"Document ID: {document_id}"
+        )
+
+        print("-" * 60)
 
 
-        # -------------------------------------------------
-        # Retry configuration
-        # -------------------------------------------------
+        # =================================================
+        # INSERT BATCH
+        # =================================================
 
-        max_retries = 5
+        try:
 
-        batch_completed = False
-
-
-        # -------------------------------------------------
-        # Retry loop
-        # -------------------------------------------------
-
-        for attempt in range(
-            1,
-            max_retries + 1
-        ):
-
-            try:
-
-                print(
-                    f"Attempt "
-                    f"{attempt}/{max_retries}"
-                )
-
-
-                # -----------------------------------------
-                # Insert batch
-                # -----------------------------------------
-
-                vectorstore.add_documents(
-                    batch
-                )
-
-
-                print(
-                    f"Batch "
-                    f"{batch_number} "
-                    f"completed successfully."
-                )
-
-
-                batch_completed = True
-
-                break
-
-
-            except Exception as e:
-
-                error_text = str(e)
-
-
-                # -----------------------------------------
-                # Detect Gemini quota errors
-                # -----------------------------------------
-
-                is_quota_error = (
-                    "RESOURCE_EXHAUSTED"
-                    in error_text
-                    or "429"
-                    in error_text
-                    or "quota"
-                    in error_text.lower()
-                )
-
-
-                # -----------------------------------------
-                # Non-quota error
-                # -----------------------------------------
-
-                if not is_quota_error:
-
-                    print()
-                   
-                    print("VECTORSTORE ERROR")
-                    
-                    print(error_text)
-                    
-
-                    raise
-
-
-                # -----------------------------------------
-                # Quota error
-                # -----------------------------------------
-
-                print()
-                print(
-                    "Gemini embedding quota reached."
-                )
-
-                print(
-                    f"Attempt "
-                    f"{attempt}/{max_retries}"
-                )
-
-
-                # -----------------------------------------
-                # Maximum retries reached
-                # -----------------------------------------
-
-                if attempt == max_retries:
-
-                    print(
-                        "Maximum retry attempts reached."
-                    )
-
-                    raise
-
-
-                # -----------------------------------------
-                # Wait before retry
-                # -----------------------------------------
-
-                wait_time = 60 * attempt
-
-                print(
-                    f"Waiting "
-                    f"{wait_time} seconds "
-                    f"before retry..."
-                )
-
-                time.sleep(wait_time)
-
-
-        # -------------------------------------------------
-        # Make sure batch succeeded
-        # -------------------------------------------------
-
-        if not batch_completed:
-
-            raise RuntimeError(
-                f"Batch {batch_number} "
-                f"could not be indexed."
+            vectorstore.add_documents(
+                batch
             )
-
-
-        # -------------------------------------------------
-        # Delay between batches
-        # -------------------------------------------------
-
-        if end < total:
 
             print(
-                "Waiting 5 seconds "
-                "before processing "
-                "the next batch..."
+                f"Batch {batch_number} "
+                "completed successfully."
             )
 
-            time.sleep(5)
+        except Exception as error:
+
+            print()
+            print("=" * 60)
+            print("VECTORSTORE ERROR")
+            print("=" * 60)
+
+            print(
+                "Error type:",
+                type(error).__name__
+            )
+
+            print(
+                "Error message:",
+                str(error)
+            )
+
+            print(
+                f"Batch: "
+                f"{batch_number}/{total_batches}"
+            )
+
+            print(
+                f"Document ID: "
+                f"{document_id}"
+            )
+
+            print("=" * 60)
+
+            raise
 
 
-    # -----------------------------------------------------
-    # Finished
-    # -----------------------------------------------------
+    # =====================================================
+    # COMPLETE
+    # =====================================================
 
     print()
-    
+    print("=" * 60)
+    print("VECTOR INDEXING COMPLETED")
+    print("=" * 60)
+
     print(
-        f"Successfully indexed "
-        f"{total} documents."
+        f"Successfully indexed: "
+        f"{total} chunks"
     )
-    print(f"Mode: {mode}")
-    print(f"Source: {source}")
-    
+
+    print(
+        f"Mode       : {mode}"
+    )
+
+    print(
+        f"Source     : {source}"
+    )
+
+    print(
+        f"Document ID: {document_id}"
+    )
+
+    print(
+        f"Collection : {COLLECTION_NAME}"
+    )
+
+    print("=" * 60)

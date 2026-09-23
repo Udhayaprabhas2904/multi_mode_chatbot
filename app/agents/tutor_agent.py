@@ -1,19 +1,37 @@
+import os
+
+from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.prompts.tutor_prompt import TUTOR_SYSTEM_PROMPT
 
 
+load_dotenv()
+
+
 def tutor_agent(query, context, chat_history=None):
     """
-    AI Tutor / Trainer.
+    AI Tutor Assistant.
 
     Answers questions using only the retrieved tutor documents.
     """
 
-    llm = ChatGoogleGenerativeAI(
-        model="gemini-3.6-flash",
-        temperature=0.2,
+    # ---------------------------------------------------------
+    # Gemini model
+    # ---------------------------------------------------------
+
+    model_name = os.getenv(
+        "GEMINI_MODEL",
+        "gemini-2.5-flash-lite",
     )
+
+    llm = ChatGoogleGenerativeAI(
+        model=model_name,
+    )
+
+    # ---------------------------------------------------------
+    # Conversation history
+    # ---------------------------------------------------------
 
     history_text = ""
 
@@ -27,10 +45,14 @@ def tutor_agent(query, context, chat_history=None):
             ]
         )
 
+    # ---------------------------------------------------------
+    # Build prompt
+    # ---------------------------------------------------------
+
     prompt = f"""
 {TUTOR_SYSTEM_PROMPT}
 
-LEARNING MATERIAL
+TEACHING MATERIAL
 
 {context}
 
@@ -38,21 +60,76 @@ PREVIOUS CONVERSATION
 
 {history_text}
 
-STUDENT QUESTION
+USER QUESTION
 
 {query}
 
-Answer the student's question now.
+Answer the user's question now.
 
 Remember:
-- Answer as a professional trainer.
-- Use only the provided learning material.
-- Keep the explanation clear and beginner-friendly.
-- Do not mention internal RAG implementation.
-- If the information is not present in the learning material, clearly
-  state that it is not available in the uploaded learning materials.
+- Behave like a professional AI Tutor.
+- Use only the provided teaching material.
+- Explain concepts clearly and step by step.
+- Give examples when supported by the teaching material.
+- Do not invent information.
+- If the answer is not available in the uploaded documents,
+  clearly say that it is not available in the uploaded material.
 """
 
-    result = llm.invoke(prompt)
+    # ---------------------------------------------------------
+    # Call Gemini
+    # ---------------------------------------------------------
 
-    return result.content
+    try:
+
+        result = llm.invoke(prompt)
+
+        return result.content
+
+    except Exception as e:
+
+        error_message = str(e)
+
+        print()
+        print("=" * 60)
+        print("[TUTOR] GEMINI ERROR")
+        print("=" * 60)
+        print("Model:", model_name)
+        print("Error type:", type(e).__name__)
+        print("Error:", error_message)
+        print("=" * 60)
+        print()
+
+        # -----------------------------------------------------
+        # Quota / rate limit
+        # -----------------------------------------------------
+
+        if (
+            "429" in error_message
+            or "RESOURCE_EXHAUSTED" in error_message
+            or "quota" in error_message.lower()
+        ):
+            raise RuntimeError(
+                "The Gemini API quota has been reached. "
+                "Please try again later or use another "
+                "available Gemini model."
+            )
+
+        # -----------------------------------------------------
+        # Temporary Gemini service problem
+        # -----------------------------------------------------
+
+        if (
+            "503" in error_message
+            or "UNAVAILABLE" in error_message
+        ):
+            raise RuntimeError(
+                "The Gemini AI service is temporarily "
+                "unavailable. Please try again later."
+            )
+
+        # -----------------------------------------------------
+        # Other Gemini error
+        # -----------------------------------------------------
+
+        raise

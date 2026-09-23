@@ -2,6 +2,7 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta
@@ -11,44 +12,124 @@
 
     <meta
         name="description"
-        content="Multi-Mode RAG Assistant with Sales Assistant and AI Tutor"
+        content="Multi-Mode RAG Assistant with Sales Management Assistant and AI Tutor"
     >
 
     <title>Multi-Mode RAG Assistant</title>
+
+
+    <!-- MAIN STYLESHEET -->
 
     <link
         rel="stylesheet"
         href="/static/style.css"
     >
+
+
+    <!-- MARKDOWN RENDERING -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"
+    ></script>
+
+
+    <!-- HTML SANITIZATION -->
+
+    <script
+        src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"
+    ></script>
+
 </head>
+
 
 <body>
 
 <div class="app-shell">
 
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
+
+    <!-- TOP HEADER -->
 
     <header class="top-header">
 
         <div class="brand">
 
             <div class="brand-logo">
-                ✦
+
+                <svg
+                    viewBox="0 0 48 48"
+                    aria-hidden="true"
+                >
+
+                    <path
+                        d="M18 9c-4.4 0-8 3.6-8 8
+                           0 1.1.2 2.1.6 3
+                           C7.8 21.2 6 24.2 6 27.5
+                           6 32.2 9.8 36 14.5 36
+                           c.7 0 1.4-.1 2-.3
+                           C17.8 39.4 20.7 41 24 41
+                           s6.2-1.6 7.5-5.3
+                           c.6.2 1.3.3 2 .3
+                           4.7 0 8.5-3.8 8.5-8.5
+                           0-3.3-1.8-6.3-4.6-7.5
+                           .4-.9.6-1.9.6-3
+                           0-4.4-3.6-8-8-8
+                           -2.1 0-4 .8-5.5 2.2
+                           C22.9 9.8 20.9 9 18 9Z"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.4"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                    <path
+                        d="M24 12v27"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2.2"
+                        stroke-linecap="round"
+                    />
+
+                    <path
+                        d="M16 18c2 0 3.5 1.5 3.5 3.5S18 25 16 25"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+
+                    <path
+                        d="M32 18c-2 0-3.5 1.5-3.5 3.5S30 25 32 25"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                    />
+
+                    <circle
+                        cx="19"
+                        cy="30"
+                        r="1.5"
+                        fill="currentColor"
+                    />
+
+                    <circle
+                        cx="29"
+                        cy="30"
+                        r="1.5"
+                        fill="currentColor"
+                    />
+
+                </svg>
+
             </div>
+
 
             <div class="brand-text">
 
-                <h1>
-                    Multi-Mode RAG Assistant
-                </h1>
+                <h1>RAG Assistant</h1>
 
-                <p>
-                    Sales Assistant
-                    <span>•</span>
-                    AI Tutor
-                </p>
+                <p>Your PDF. Smarter Answers.</p>
 
             </div>
 
@@ -59,20 +140,66 @@
 
             <button
                 id="themeBtn"
-                class="icon-btn"
+                class="theme-btn"
                 title="Toggle theme"
                 type="button"
+                aria-label="Toggle theme"
             >
-                ☼
-            </button>
+
+                <!-- Sun -->
+
+                <svg
+                    class="sun-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+
+                    <circle
+                        cx="12"
+                        cy="12"
+                        r="4"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                    />
+
+                    <path
+                        d="M12 2v2
+                           M12 20v2
+                           M4.93 4.93l1.42 1.42
+                           M17.65 17.65l1.42 1.42
+                           M2 12h2
+                           M20 12h2
+                           M4.93 19.07l1.42-1.42
+                           M17.65 6.35l1.42-1.42"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                    />
+
+                </svg>
 
 
-            <button
-                class="profile-btn"
-                title="Profile"
-                type="button"
-            >
-                👤
+                <!-- Moon -->
+
+                <svg
+                    class="moon-icon"
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                >
+
+                    <path
+                        d="M20.5 15.5A8.5 8.5 0 0 1 8.5 3.5
+                           8.5 8.5 0 1 0 20.5 15.5Z"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linejoin="round"
+                    />
+
+                </svg>
+
             </button>
 
         </div>
@@ -80,126 +207,129 @@
     </header>
 
 
-    <!-- =====================================================
-         MAIN WORKSPACE
-    ====================================================== -->
+    <!-- MAIN WORKSPACE -->
 
-    <div class="workspace">
+    <main class="workspace">
 
 
-        <!-- =================================================
-             LEFT SIDEBAR
-        ================================================== -->
+        <!-- LEFT SIDEBAR -->
 
         <aside class="left-sidebar">
 
 
-            <!-- =================================================
-                 MODE SETTINGS
-            ================================================== -->
+            <!-- MODE SELECTOR -->
 
             <section class="panel mode-panel">
 
-                <div class="panel-heading">
+                <div class="mode-switcher">
 
-                    <div>
+                    <button
+                        id="salesModeBtn"
+                        class="mode-tab active"
+                        onclick="setMode('sales')"
+                        type="button"
+                    >
 
-                        <h2>
-                            Mode Settings
-                        </h2>
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
 
-                        <p>
-                            Choose the assistant mode
-                        </p>
+                            <path
+                                d="M6 8.5h12v10H6z"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linejoin="round"
+                            />
 
-                    </div>
+                            <path
+                                d="M9 8.5V6.8A1.8 1.8 0 0 1 10.8 5
+                                   h2.4A1.8 1.8 0 0 1 15 6.8v1.7"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
 
-                    <span class="heading-icon">
-                        ☷
-                    </span>
+                            <path
+                                d="M4 12h16"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+
+                        </svg>
+
+                        <span>Sales</span>
+
+                    </button>
+
+
+                    <button
+                        id="tutorModeBtn"
+                        class="mode-tab"
+                        onclick="setMode('tutor')"
+                        type="button"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="M3.5 7.5 12 4l8.5 3.5L12 11
+                                   3.5 7.5Z"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M6.5 9v5.2c0 1.4 2.5 2.8 5.5 2.8
+                                   s5.5-1.4 5.5-2.8V9"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                            />
+
+                            <path
+                                d="M20.5 8v6"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+
+                        </svg>
+
+                        <span>AI Tutor</span>
+
+                    </button>
 
                 </div>
 
 
-                <!-- SALES MODE -->
+                <div class="active-mode-row">
 
-                <button
-                    id="salesModeBtn"
-                    class="mode-card active"
-                    onclick="setMode('sales')"
-                    type="button"
-                >
+                    <div class="active-mode-info">
 
-                    <span class="mode-symbol sales-symbol">
-                        ▣
-                    </span>
+                        <span class="active-mode-dot"></span>
 
-                    <span class="mode-copy">
+                        <div>
 
-                        <strong>
-                            Sales
-                        </strong>
+                            <small>Active mode</small>
 
-                        <small>
-                            Sales Management Assistant
-                        </small>
+                            <strong id="activeModeLabel">
+                                Sales
+                            </strong>
 
-                    </span>
-
-                    <span class="mode-arrow">
-                        ›
-                    </span>
-
-                </button>
-
-
-                <!-- AI TUTOR MODE -->
-
-                <button
-                    id="tutorModeBtn"
-                    class="mode-card"
-                    onclick="setMode('tutor')"
-                    type="button"
-                >
-
-                    <span class="mode-symbol tutor-symbol">
-                        ◆
-                    </span>
-
-                    <span class="mode-copy">
-
-                        <strong>
-                            AI Tutor
-                        </strong>
-
-                        <small>
-                            Teacher & Tutor Assistant
-                        </small>
-
-                    </span>
-
-                    <span class="mode-arrow">
-                        ›
-                    </span>
-
-                </button>
-
-
-                <!-- ACTIVE MODE -->
-
-                <div class="active-mode">
-
-                    <div>
-
-                        <span>
-                            Active Mode
-                        </span>
-
-                        <strong id="activeModeLabel">
-                            Sales
-                        </strong>
+                        </div>
 
                     </div>
+
 
                     <span class="ready-badge">
                         Ready
@@ -210,30 +340,59 @@
             </section>
 
 
-
-            <!-- =================================================
-                 UPLOAD PDF
-            ================================================== -->
+            <!-- UPLOAD PDF -->
 
             <section class="panel upload-panel">
 
-                <div class="panel-heading">
+                <div class="section-heading">
 
-                    <div>
+                    <div class="section-icon upload-section-icon">
 
-                        <h2>
-                            Upload PDF
-                        </h2>
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
 
-                        <p>
-                            Maximum file size: 1 GB
-                        </p>
+                            <path
+                                d="M12 16V4"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.9"
+                                stroke-linecap="round"
+                            />
+
+                            <path
+                                d="m7.5 8.5 4.5-4.5 4.5 4.5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.9"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M5 14.5v3A2.5 2.5 0 0 0 7.5 20h9
+                                   a2.5 2.5 0 0 0 2.5-2.5v-3"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.9"
+                                stroke-linecap="round"
+                            />
+
+                        </svg>
 
                     </div>
 
-                    <span class="heading-icon">
-                        ⇧
-                    </span>
+
+                    <div>
+
+                        <h2>Upload Your PDF</h2>
+
+                        <p>
+                            Add a document to your knowledge base
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -245,24 +404,103 @@
                     class="drop-zone"
                 >
 
-                    <div class="cloud-icon">
-                        ☁
+                    <div class="drop-icon">
+
+                        <svg
+                            viewBox="0 0 48 48"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="M15 36h20a8 8 0 0 0 1-15.9
+                                   A12 12 0 0 0 12.5 17
+                                   A9.5 9.5 0 0 0 15 36Z"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M24 30V16"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                            />
+
+                            <path
+                                d="m18.5 21.5 5.5-5.5 5.5 5.5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.5"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                        </svg>
+
                     </div>
 
-                    <h3>
-                        Drag & drop your PDF
-                    </h3>
 
-                    <p>
-                        or
-                    </p>
+                    <div class="drop-content">
+
+                        <strong>
+                            Drag & drop your PDF here
+                        </strong>
+
+                        <span>
+                            or click the button to browse
+                        </span>
+
+                        <small>
+                            PDF only &nbsp;•&nbsp; Maximum 1 GB
+                        </small>
+
+                    </div>
 
 
                     <label
                         for="pdfFile"
                         class="choose-btn"
                     >
-                        Choose File
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="M12 16V4"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            />
+
+                            <path
+                                d="m7.5 8.5 4.5-4.5 4.5 4.5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M5 14v3.5A2.5 2.5 0 0 0 7.5 20h9
+                                   a2.5 2.5 0 0 0 2.5-2.5V14"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            />
+
+                        </svg>
+
+                        <span>Choose File</span>
+
                     </label>
 
 
@@ -275,18 +513,10 @@
                     >
 
 
-                    <small>
-                        PDF only
-                        <span>•</span>
-                        Max size: 1 GB
-                    </small>
-
-
                     <div
                         id="selectedFile"
                         class="selected-file hidden"
-                    >
-                    </div>
+                    ></div>
 
                 </div>
 
@@ -296,20 +526,40 @@
                 <div class="field">
 
                     <label for="uploadMode">
-                        Document Type
+                        Document type
                     </label>
 
-                    <select id="uploadMode">
+                    <div class="select-wrapper">
 
-                        <option value="sales">
-                            ▣ Sales Documents
-                        </option>
+                        <select id="uploadMode">
 
-                        <option value="tutor">
-                            ◆ Education Documents
-                        </option>
+                            <option value="sales">
+                                Sales Documents
+                            </option>
 
-                    </select>
+                            <option value="tutor">
+                                Education Documents
+                            </option>
+
+                        </select>
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="m7 9 5 5 5-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                        </svg>
+
+                    </div>
 
                 </div>
 
@@ -323,66 +573,150 @@
                     type="button"
                 >
 
-                    <span>
-                        ⇧
-                    </span>
+                    <svg
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                    >
 
-                    Upload & Index PDF
+                        <path
+                            d="M12 16V4"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        />
+
+                        <path
+                            d="m7.5 8.5 4.5-4.5 4.5 4.5"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                        />
+
+                        <path
+                            d="M5 14v3.5A2.5 2.5 0 0 0 7.5 20h9
+                               a2.5 2.5 0 0 0 2.5-2.5V14"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                            stroke-linecap="round"
+                        />
+
+                    </svg>
+
+                    <span>
+                        Upload & Index PDF
+                    </span>
 
                 </button>
 
 
-                <!-- UPLOAD STATUS -->
-
                 <div
                     id="uploadStatus"
                     class="upload-status"
-                >
-                </div>
-
-
-                <!-- INFORMATION -->
-
-                <div class="info-note">
-
-                    <span>
-                        i
-                    </span>
-
-                    <p>
-                        After uploading and indexing a PDF,
-                        chat will be activated.
-                    </p>
-
-                </div>
+                ></div>
 
             </section>
 
 
-
-            <!-- =================================================
-                 UPLOADED DOCUMENTS
-            ================================================== -->
+            <!-- DOCUMENTS -->
 
             <section class="panel documents-panel">
 
-                <div class="panel-heading">
+                <div class="documents-heading">
 
-                    <div>
+                    <div class="section-heading compact">
 
-                        <h2>
-                            Uploaded Documents
-                        </h2>
+                        <div class="section-icon">
 
-                        <p>
-                            Your RAG knowledge base
-                        </p>
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+
+                                <path
+                                    d="M6 3.5h8l4 4V20.5H6z"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linejoin="round"
+                                />
+
+                                <path
+                                    d="M14 3.5v4h4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linejoin="round"
+                                />
+
+                                <path
+                                    d="M9 12h6M9 15.5h6"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                />
+
+                            </svg>
+
+                        </div>
+
+
+                        <div>
+
+                            <h2>
+                                Uploaded Documents
+                            </h2>
+
+                            <p>
+                                Your RAG knowledge base
+                            </p>
+
+                        </div>
 
                     </div>
 
-                    <span class="heading-icon">
-                        ▤
-                    </span>
+
+                    <button
+                        class="refresh-btn"
+                        onclick="loadDocuments()"
+                        type="button"
+                        title="Refresh documents"
+                    >
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="M20 11a8 8 0 0 0-14.8-4
+                                   M4 13a8 8 0 0 0 14.8 4"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                            />
+
+                            <path
+                                d="M5 4v4h4M19 20v-4h-4"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                        </svg>
+
+                        <span>
+                            Refresh
+                        </span>
+
+                    </button>
 
                 </div>
 
@@ -394,9 +728,31 @@
 
                     <div class="empty-docs">
 
-                        <span>
-                            □
-                        </span>
+                        <div class="empty-doc-icon">
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+
+                                <path
+                                    d="M6 3.5h8l4 4V20.5H6z"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linejoin="round"
+                                />
+
+                                <path
+                                    d="M14 3.5v4h4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
+
+                            </svg>
+
+                        </div>
 
                         <p>
                             No documents uploaded yet.
@@ -410,17 +766,66 @@
 
                 </div>
 
+
+                <!-- TIP -->
+
+                <div class="tip-box">
+
+                    <div class="tip-icon">
+
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="M9 18h6M10 21h4"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linecap="round"
+                            />
+
+                            <path
+                                d="M8.2 14.5A6 6 0 1 1 15.8 14.5
+                                   c-.9.8-1.3 1.6-1.5 2.5h-4.6
+                                   c-.2-.9-.6-1.7-1.5-2.5Z"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.7"
+                                stroke-linejoin="round"
+                            />
+
+                        </svg>
+
+                    </div>
+
+
+                    <div>
+
+                        <strong>
+                            Tip
+                        </strong>
+
+                        <p>
+                            You can switch between
+                            <b>Sales</b> and
+                            <b>AI Tutor</b>
+                            anytime without starting a new chat.
+                        </p>
+
+                    </div>
+
+                </div>
+
             </section>
 
         </aside>
 
 
+        <!-- RIGHT COLUMN — CHAT -->
 
-        <!-- =================================================
-             CHAT AREA
-        ================================================== -->
-
-        <main class="chat-panel">
+        <section class="chat-panel">
 
 
             <!-- CHAT HEADER -->
@@ -430,8 +835,45 @@
                 <div class="chat-title">
 
                     <div class="chat-icon">
-                        ⌁
+
+                        <svg
+                            viewBox="0 0 32 32"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="M7 7.5h18a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H15l-5.5 4v-4H7a3 3 0 0 1-3-3v-10a3 3 0 0 1 3-3Z"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linejoin="round"
+                            />
+
+                            <circle
+                                cx="11"
+                                cy="15.5"
+                                r="1.2"
+                                fill="currentColor"
+                            />
+
+                            <circle
+                                cx="16"
+                                cy="15.5"
+                                r="1.2"
+                                fill="currentColor"
+                            />
+
+                            <circle
+                                cx="21"
+                                cy="15.5"
+                                r="1.2"
+                                fill="currentColor"
+                            />
+
+                        </svg>
+
                     </div>
+
 
                     <div>
 
@@ -453,8 +895,7 @@
                     class="chat-status inactive"
                 >
 
-                    <span class="status-dot">
-                    </span>
+                    <span class="status-dot"></span>
 
                     <span id="chatStatusText">
                         Chat inactive
@@ -465,135 +906,135 @@
             </div>
 
 
-
-            <!-- =================================================
-                 CHAT MESSAGES
-            ================================================== -->
+            <!-- CHAT MESSAGES -->
 
             <div
                 id="chatMessages"
                 class="chat-messages"
             >
 
-                <!-- EMPTY STATE -->
+                <!-- EMPTY CHAT -->
 
                 <div
                     id="emptyChat"
                     class="empty-chat"
                 >
 
-                    <div class="pdf-illustration">
+                    <div class="welcome-icon">
 
-                        <div class="pdf-page">
-                            PDF
-                        </div>
+                        <svg
+                            viewBox="0 0 64 64"
+                            aria-hidden="true"
+                        >
 
-                        <div class="upload-bubble">
-                            ↑
-                        </div>
+                            <rect
+                                x="14"
+                                y="18"
+                                width="36"
+                                height="28"
+                                rx="8"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.8"
+                            />
+
+                            <path
+                                d="M23 46v5l7-5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                            <path
+                                d="M32 12v6"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2.8"
+                                stroke-linecap="round"
+                            />
+
+                            <circle
+                                cx="32"
+                                cy="9"
+                                r="2.5"
+                                fill="currentColor"
+                            />
+
+                            <circle
+                                cx="26"
+                                cy="31"
+                                r="2"
+                                fill="currentColor"
+                            />
+
+                            <circle
+                                cx="38"
+                                cy="31"
+                                r="2"
+                                fill="currentColor"
+                            />
+
+                            <path
+                                d="M25 38c4 3 10 3 14 0"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                            />
+
+                        </svg>
 
                     </div>
 
 
                     <h2>
-                        Upload a PDF to Start Chatting
+                        Welcome to RAG Assistant
                     </h2>
 
 
                     <p>
-
-                        Your selected mode will be activated
-                        after indexing.
-
-                        <br>
-
-                        Ask questions and get answers
-                        from your knowledge base.
-
+                        Ask questions about your document
+                        and get accurate, source-based
+                        answers powered by AI.
                     </p>
 
 
-                    <!-- MODE INFORMATION -->
+                    <div class="welcome-hint">
 
-                    <div class="mode-info-grid">
+                        <span class="hint-icon">
 
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
 
-                        <!-- SALES -->
+                                <path
+                                    d="M12 3a7 7 0 0 0-4 12.7
+                                       c.6.5 1 1.2 1 2v1.3h6V17.7
+                                       c0-1 .4-1.5 1-2A7 7 0 0 0 12 3Z"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                />
 
-                        <div class="mode-info sales-info">
+                                <path
+                                    d="M9.5 21h5M10 18h4"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.7"
+                                    stroke-linecap="round"
+                                />
 
-                            <div class="info-icon">
-                                ▣
-                            </div>
+                            </svg>
 
-                            <h3>
-                                Sales Mode
-                            </h3>
+                        </span>
 
-                            <ul>
-
-                                <li>
-                                    Product details & features
-                                </li>
-
-                                <li>
-                                    Pricing information
-                                </li>
-
-                                <li>
-                                    Customer queries
-                                </li>
-
-                                <li>
-                                    Sales policies & procedures
-                                </li>
-
-                                <li>
-                                    Recommendations & comparisons
-                                </li>
-
-                            </ul>
-
-                        </div>
-
-
-                        <!-- AI TUTOR -->
-
-                        <div class="mode-info tutor-info">
-
-                            <div class="info-icon">
-                                ◆
-                            </div>
-
-                            <h3>
-                                AI Tutor Mode
-                            </h3>
-
-                            <ul>
-
-                                <li>
-                                    Explain concepts
-                                </li>
-
-                                <li>
-                                    Create notes & summaries
-                                </li>
-
-                                <li>
-                                    Give examples
-                                </li>
-
-                                <li>
-                                    Step-by-step explanations
-                                </li>
-
-                                <li>
-                                    Practice questions & revision
-                                </li>
-
-                            </ul>
-
-                        </div>
+                        <span>
+                            Upload a PDF from the left panel
+                            to get started.
+                        </span>
 
                     </div>
 
@@ -602,349 +1043,1284 @@
             </div>
 
 
-
-            <!-- =================================================
-                 CHAT COMPOSER
-            ================================================== -->
+            <!-- CHAT COMPOSER -->
 
             <div class="composer">
 
-
-                <!-- MODE SELECTOR -->
-
-                <div class="composer-mode-wrap">
-
-                    <button
-                        id="inputModeButton"
-                        class="input-mode-btn"
-                        onclick="toggleModeMenu()"
-                        type="button"
-                    >
-
-                        <span id="inputModeIcon">
-                            ▣
-                        </span>
-
-                        <span id="inputModeText">
-                            Sales
-                        </span>
-
-                        <span>
-                            ⌄
-                        </span>
-
-                    </button>
+                <div class="composer-inner">
 
 
-                    <!-- MODE MENU -->
+                    <!-- MODE SELECTOR -->
 
-                    <div
-                        id="modeMenu"
-                        class="mode-menu hidden"
-                    >
+                    <div class="composer-mode-wrap">
 
                         <button
-                            onclick="setMode('sales'); toggleModeMenu()"
+                            id="inputModeButton"
+                            class="input-mode-btn"
+                            onclick="toggleModeMenu()"
                             type="button"
+                            aria-haspopup="menu"
+                            aria-expanded="false"
                         >
-                            ▣ Sales
+
+                            <span
+                                id="inputModeIcon"
+                                class="input-mode-icon"
+                            >
+
+                                <svg
+                                    viewBox="0 0 24 24"
+                                    aria-hidden="true"
+                                >
+
+                                    <path
+                                        d="M6 8.5h12v10H6z"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                    />
+
+                                    <path
+                                        d="M9 8.5V6.8A1.8 1.8 0 0 1 10.8 5
+                                           h2.4A1.8 1.8 0 0 1 15 6.8v1.7"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.8"
+                                    />
+
+                                </svg>
+
+                            </span>
+
+
+                            <span id="inputModeText">
+                                Sales
+                            </span>
+
+
+                            <svg
+                                class="chevron-icon"
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+
+                                <path
+                                    d="m7 9 5 5 5-5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                />
+
+                            </svg>
+
                         </button>
 
-                        <button
-                            onclick="setMode('tutor'); toggleModeMenu()"
-                            type="button"
+
+                        <!-- MODE MENU -->
+
+                        <div
+                            id="modeMenu"
+                            class="mode-menu hidden"
+                            role="menu"
                         >
-                            ◆ AI Tutor
-                        </button>
+
+                            <button
+                                onclick="setMode('sales'); toggleModeMenu()"
+                                type="button"
+                                role="menuitem"
+                            >
+
+                                <span class="menu-icon">
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        aria-hidden="true"
+                                    >
+
+                                        <path
+                                            d="M6 8.5h12v10H6z"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.8"
+                                        />
+
+                                        <path
+                                            d="M9 8.5V6.8A1.8 1.8 0 0 1 10.8 5
+                                               h2.4A1.8 1.8 0 0 1 15 6.8v1.7"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.8"
+                                        />
+
+                                    </svg>
+
+                                </span>
+
+                                Sales
+
+                            </button>
+
+
+                            <button
+                                onclick="setMode('tutor'); toggleModeMenu()"
+                                type="button"
+                                role="menuitem"
+                            >
+
+                                <span class="menu-icon">
+
+                                    <svg
+                                        viewBox="0 0 24 24"
+                                        aria-hidden="true"
+                                    >
+
+                                        <path
+                                            d="M3.5 7.5 12 4l8.5 3.5L12 11
+                                               3.5 7.5Z"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.8"
+                                        />
+
+                                        <path
+                                            d="M6.5 9v5.2c0 1.4 2.5 2.8 5.5 2.8
+                                               s5.5-1.4 5.5-2.8V9"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            stroke-width="1.8"
+                                        />
+
+                                    </svg>
+
+                                </span>
+
+                                AI Tutor
+
+                            </button>
+
+                        </div>
 
                     </div>
 
-                </div>
+
+                    <!-- MESSAGE INPUT -->
+
+                    <div class="message-box">
+
+                        <svg
+                            class="message-icon"
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+
+                            <path
+                                d="M20.5 11.5 12 20a5 5 0 0 1-7-7l8.5-8.5
+                                   a3.5 3.5 0 0 1 5 5L10 18.5
+                                   a2 2 0 0 1-2.8-2.8l7.5-7.5"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="1.8"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+
+                        </svg>
 
 
-
-                <!-- MESSAGE BOX -->
-
-                <div class="message-box">
-
-                    <input
-                        id="messageInput"
-                        type="text"
-                        placeholder="Upload a PDF to activate chat..."
-                        disabled
-                        autocomplete="off"
-                        onkeydown="handleKey(event)"
-                    >
+                        <input
+                            id="messageInput"
+                            type="text"
+                            placeholder="Ask a question about your document..."
+                            disabled
+                            autocomplete="off"
+                            onkeydown="handleKey(event)"
+                        >
 
 
-                    <button
-                        id="sendButton"
-                        onclick="sendMessage()"
-                        disabled
-                        title="Send message"
-                        type="button"
-                    >
-                        ➤
-                    </button>
+                        <button
+                            id="sendButton"
+                            onclick="sendMessage()"
+                            disabled
+                            title="Send message"
+                            type="button"
+                            aria-label="Send message"
+                        >
+
+                            <svg
+                                viewBox="0 0 24 24"
+                                aria-hidden="true"
+                            >
+
+                                <path
+                                    d="M21 3 10.5 13.5"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                />
+
+                                <path
+                                    d="m21 3-6.5 18-4-7.5L3 9l18-6Z"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="1.8"
+                                    stroke-linejoin="round"
+                                />
+
+                            </svg>
+
+                        </button>
+
+                    </div>
 
                 </div>
 
             </div>
 
-        </main>
+        </section>
 
-
-
-        <!-- =================================================
-             RIGHT INFORMATION PANEL
-        ================================================== -->
-
-        <aside class="right-sidebar">
-
-            <section class="panel info-panel">
-
-
-                <!-- PANEL HEADER -->
-
-                <div class="panel-heading">
-
-                    <div class="info-title">
-
-                        <span class="big-heading-icon">
-                            ▤
-                        </span>
-
-                        <h2>
-                            Information Panel
-                        </h2>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     KEY FEATURES
-                ================================================== -->
-
-                <div class="info-section">
-
-                    <h3>
-                        Key Features
-                    </h3>
-
-
-                    <!-- FEATURE 1 -->
-
-                    <div class="feature">
-
-                        <span class="feature-icon green">
-                            ✓
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                RAG-based responses
-                            </strong>
-
-                            <p>
-                                Answers grounded in your
-                                uploaded documents.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- FEATURE 2 -->
-
-                    <div class="feature">
-
-                        <span class="feature-icon purple">
-                            ↔
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                Switch modes anytime
-                            </strong>
-
-                            <p>
-                                Change between Sales and
-                                AI Tutor in the same chat.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- FEATURE 3 -->
-
-                    <div class="feature">
-
-                        <span class="feature-icon blue">
-                            ☁
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                Large PDF support
-                            </strong>
-
-                            <p>
-                                Upload PDFs up to 1 GB.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- FEATURE 4 -->
-
-                    <div class="feature">
-
-                        <span class="feature-icon orange">
-                            ⌕
-                        </span>
-
-                        <div>
-
-                            <strong>
-                                Source-aware answers
-                            </strong>
-
-                            <p>
-                                Responses can reference
-                                retrieved document content.
-                            </p>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     HOW IT WORKS
-                ================================================== -->
-
-                <div class="info-section how-section">
-
-                    <h3>
-                        How It Works
-                    </h3>
-
-
-                    <div class="step">
-
-                        <span>
-                            1
-                        </span>
-
-                        <p>
-
-                            Upload your PDF
-
-                            <br>
-
-                            <small>
-                                Max 1 GB
-                            </small>
-
-                        </p>
-
-                    </div>
-
-
-                    <div class="step">
-
-                        <span>
-                            2
-                        </span>
-
-                        <p>
-                            Wait for indexing to complete
-                        </p>
-
-                    </div>
-
-
-                    <div class="step">
-
-                        <span>
-                            3
-                        </span>
-
-                        <p>
-                            Choose Sales or AI Tutor
-                        </p>
-
-                    </div>
-
-
-                    <div class="step">
-
-                        <span>
-                            4
-                        </span>
-
-                        <p>
-                            Start chatting
-                        </p>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- =================================================
-                     TIP
-                ================================================== -->
-
-                <div class="tip-box">
-
-                    <span>
-                        ✧
-                    </span>
-
-                    <div>
-
-                        <strong>
-                            Tip
-                        </strong>
-
-                        <p>
-
-                            You can switch between Sales
-                            and AI Tutor anytime without
-                            starting a new chat.
-
-                        </p>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-        </aside>
-
-    </div>
+    </main>
 
 </div>
 
 
+<!-- MARKDOWN CONFIGURATION -->
+
+<script>
+
+if (typeof marked !== "undefined") {
+
+    marked.setOptions({
+        gfm: true,
+        breaks: true
+    });
+
+}
+
+</script>
+
+
+<!-- APPLICATION JAVASCRIPT -->
+
 <script src="/static/app.js"></script>
+
+
+<!-- CHAT ACTIONS -->
+
+<script>
+
+(function () {
+
+    "use strict";
+
+
+    /* ICONS */
+
+    function copyIcon() {
+
+        return `
+            <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <rect
+                    x="8"
+                    y="8"
+                    width="11"
+                    height="11"
+                    rx="2"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                />
+
+                <path
+                    d="M16 8V6a2 2 0 0 0-2-2H6
+                       a2 2 0 0 0-2 2v8
+                       a2 2 0 0 0 2 2h2"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                />
+            </svg>
+        `;
+    }
+
+
+    function volumeIcon() {
+
+        return `
+            <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <path
+                    d="M4 10v4h4l5 4V6l-5 4H4Z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linejoin="round"
+                />
+
+                <path
+                    d="M16 9.5a4 4 0 0 1 0 5
+                       M18.5 7a7.5 7.5 0 0 1 0 10"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.8"
+                    stroke-linecap="round"
+                />
+            </svg>
+        `;
+    }
+
+
+    function stopIcon() {
+
+        return `
+            <svg
+                viewBox="0 0 24 24"
+                aria-hidden="true"
+            >
+                <rect
+                    x="7"
+                    y="7"
+                    width="10"
+                    height="10"
+                    rx="1.5"
+                    fill="currentColor"
+                />
+            </svg>
+        `;
+    }
+
+
+    /* CREATE ACTION BUTTONS */
+
+    function addActionButtons(messageWrapper) {
+
+        if (!messageWrapper) {
+            return;
+        }
+
+        if (
+            !messageWrapper.classList.contains(
+                "assistant"
+            )
+        ) {
+            return;
+        }
+
+        /*
+           Do not add buttons to the temporary
+           searching/typing message.
+        */
+
+        if (
+            messageWrapper.id === "typingMessage" ||
+            messageWrapper.classList.contains(
+                "processing-message"
+            )
+        ) {
+            return;
+        }
+
+
+        /*
+           Do not create duplicate action bars.
+        */
+
+        if (
+            messageWrapper.querySelector(
+                ".message-actions"
+            )
+        ) {
+            return;
+        }
+
+
+        const bubble =
+            messageWrapper.querySelector(
+                ".bubble"
+            );
+
+        if (!bubble) {
+            return;
+        }
+
+
+        /*
+           Do not add actions to an empty bubble.
+        */
+
+        const text =
+            bubble.innerText.trim();
+
+        if (!text) {
+            return;
+        }
+
+
+        const actions =
+            document.createElement(
+                "div"
+            );
+
+        actions.className =
+            "message-actions";
+
+
+        /* COPY */
+
+        const copyButton =
+            document.createElement(
+                "button"
+            );
+
+        copyButton.type =
+            "button";
+
+        copyButton.className =
+            "message-action-btn copy-action";
+
+        copyButton.title =
+            "Copy answer";
+
+        copyButton.setAttribute(
+            "aria-label",
+            "Copy answer"
+        );
+
+        copyButton.innerHTML =
+            copyIcon();
+
+
+        /* READ ALOUD */
+
+        const readButton =
+            document.createElement(
+                "button"
+            );
+
+        readButton.type =
+            "button";
+
+        readButton.className =
+            "message-action-btn read-action";
+
+        readButton.title =
+            "Read aloud";
+
+        readButton.setAttribute(
+            "aria-label",
+            "Read aloud"
+        );
+
+        readButton.innerHTML =
+            volumeIcon();
+
+
+        actions.appendChild(
+            copyButton
+        );
+
+        actions.appendChild(
+            readButton
+        );
+
+
+        /*
+           Put buttons directly under the
+           answer bubble.
+        */
+
+        messageWrapper.appendChild(
+            actions
+        );
+
+
+        /* COPY ACTION */
+
+        copyButton.addEventListener(
+            "click",
+            async function () {
+
+                const answer =
+                    bubble.innerText.trim();
+
+                if (!answer) {
+                    return;
+                }
+
+                try {
+
+                    await navigator.clipboard.writeText(
+                        answer
+                    );
+
+                    copyButton.innerHTML = `
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="m5 12 4 4L19 6"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    `;
+
+                    copyButton.title =
+                        "Copied";
+
+                    copyButton.classList.add(
+                        "copied"
+                    );
+
+
+                    setTimeout(
+                        function () {
+
+                            copyButton.innerHTML =
+                                copyIcon();
+
+                            copyButton.title =
+                                "Copy answer";
+
+                            copyButton.classList.remove(
+                                "copied"
+                            );
+
+                        },
+                        1500
+                    );
+
+                } catch (error) {
+
+                    console.error(
+                        "Copy failed:",
+                        error
+                    );
+
+                    /*
+                       Fallback for browsers where
+                       navigator.clipboard is unavailable.
+                    */
+
+                    const textarea =
+                        document.createElement(
+                            "textarea"
+                        );
+
+                    textarea.value =
+                        answer;
+
+                    textarea.style.position =
+                        "fixed";
+
+                    textarea.style.opacity =
+                        "0";
+
+                    document.body.appendChild(
+                        textarea
+                    );
+
+                    textarea.select();
+
+                    try {
+
+                        document.execCommand(
+                            "copy"
+                        );
+
+                    } catch (fallbackError) {
+
+                        console.error(
+                            "Copy fallback failed:",
+                            fallbackError
+                        );
+
+                    }
+
+                    textarea.remove();
+
+                    copyButton.innerHTML = `
+                        <svg
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                        >
+                            <path
+                                d="m5 12 4 4L19 6"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                            />
+                        </svg>
+                    `;
+
+                    copyButton.title =
+                        "Copied";
+
+                    setTimeout(
+                        function () {
+
+                            copyButton.innerHTML =
+                                copyIcon();
+
+                            copyButton.title =
+                                "Copy answer";
+
+                        },
+                        1500
+                    );
+                }
+
+            }
+        );
+
+
+        /* READ ALOUD */
+
+        readButton.addEventListener(
+            "click",
+            function () {
+
+                if (
+                    !(
+                        "speechSynthesis"
+                        in window
+                    )
+                ) {
+
+                    alert(
+                        "Read aloud is not supported in this browser."
+                    );
+
+                    return;
+                }
+
+
+                /*
+                   If speech is currently active,
+                   clicking again stops it.
+                */
+
+                if (
+                    window.speechSynthesis.speaking
+                ) {
+
+                    window.speechSynthesis.cancel();
+
+                    readButton.innerHTML =
+                        volumeIcon();
+
+                    readButton.title =
+                        "Read aloud";
+
+                    readButton.setAttribute(
+                        "aria-label",
+                        "Read aloud"
+                    );
+
+                    readButton.classList.remove(
+                        "speaking"
+                    );
+
+                    return;
+                }
+
+
+                const answer =
+                    bubble.innerText.trim();
+
+                if (!answer) {
+                    return;
+                }
+
+
+                /*
+                   Stop any previous speech.
+                */
+
+                window.speechSynthesis.cancel();
+
+
+                /*
+                   Create speech.
+                */
+
+                const utterance =
+                    new SpeechSynthesisUtterance(
+                        answer
+                    );
+
+                utterance.rate =
+                    1;
+
+                utterance.pitch =
+                    1;
+
+                utterance.volume =
+                    1;
+
+
+                /*
+                   Mark this button as active.
+                */
+
+                readButton.innerHTML =
+                    stopIcon();
+
+                readButton.title =
+                    "Stop reading";
+
+                readButton.setAttribute(
+                    "aria-label",
+                    "Stop reading"
+                );
+
+                readButton.classList.add(
+                    "speaking"
+                );
+
+
+                utterance.onend =
+                    function () {
+
+                        readButton.innerHTML =
+                            volumeIcon();
+
+                        readButton.title =
+                            "Read aloud";
+
+                        readButton.setAttribute(
+                            "aria-label",
+                            "Read aloud"
+                        );
+
+                        readButton.classList.remove(
+                            "speaking"
+                        );
+                    };
+
+
+                utterance.onerror =
+                    function (error) {
+
+                        console.error(
+                            "Speech synthesis error:",
+                            error
+                        );
+
+                        readButton.innerHTML =
+                            volumeIcon();
+
+                        readButton.title =
+                            "Read aloud";
+
+                        readButton.setAttribute(
+                            "aria-label",
+                            "Read aloud"
+                        );
+
+                        readButton.classList.remove(
+                            "speaking"
+                        );
+                    };
+
+
+                window.speechSynthesis.speak(
+                    utterance
+                );
+
+            }
+        );
+
+    }
+
+
+    /* SEARCHING MESSAGE */
+
+    let searchingMessage = null;
+
+
+    function showSearchingMessage() {
+
+        const chat =
+            document.getElementById(
+                "chatMessages"
+            );
+
+        if (!chat) {
+            return;
+        }
+
+
+        /*
+           Don't create duplicates.
+        */
+
+        if (searchingMessage) {
+            return;
+        }
+
+
+        const wrapper =
+            document.createElement(
+                "div"
+            );
+
+        wrapper.className =
+            "message assistant processing-message";
+
+
+        const bubble =
+            document.createElement(
+                "div"
+            );
+
+        bubble.className =
+            "bubble searching-bubble";
+
+
+        bubble.innerHTML = `
+            <div class="searching-content">
+
+                <span class="searching-spinner">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </span>
+
+                <span>
+                    Searching the uploaded document...
+                </span>
+
+            </div>
+        `;
+
+
+        wrapper.appendChild(
+            bubble
+        );
+
+        chat.appendChild(
+            wrapper
+        );
+
+        searchingMessage =
+            wrapper;
+
+
+        requestAnimationFrame(
+            function () {
+
+                chat.scrollTop =
+                    chat.scrollHeight;
+
+            }
+        );
+
+    }
+
+
+    function removeSearchingMessage() {
+
+        if (searchingMessage) {
+
+            searchingMessage.remove();
+
+            searchingMessage =
+                null;
+        }
+
+    }
+
+
+    /* OBSERVE CHAT STATUS */
+
+    function observeChatStatus() {
+
+        const statusText =
+            document.getElementById(
+                "chatStatusText"
+            );
+
+        if (!statusText) {
+            return;
+        }
+
+
+        const observer =
+            new MutationObserver(
+                function () {
+
+                    const text =
+                        statusText.textContent
+                            .trim()
+                            .toLowerCase();
+
+
+                    if (
+                        text.includes(
+                            "searching"
+                        )
+                    ) {
+
+                        showSearchingMessage();
+
+                    } else if (
+                        text.includes(
+                            "chat connected"
+                        ) ||
+                        text.includes(
+                            "processing"
+                        ) === false
+                    ) {
+
+                        /*
+                           Don't remove immediately for
+                           arbitrary status changes if an
+                           answer is still processing.
+                        */
+
+                    }
+
+                }
+            );
+
+
+        observer.observe(
+            statusText,
+            {
+                childList: true,
+                characterData: true,
+                subtree: true
+            }
+        );
+
+    }
+
+
+    /* OBSERVE CHAT MESSAGES */
+
+    function observeChatMessages() {
+
+        const chat =
+            document.getElementById(
+                "chatMessages"
+            );
+
+        if (!chat) {
+            return;
+        }
+
+
+        const observer =
+            new MutationObserver(
+                function () {
+
+                    /*
+                       If a real assistant answer exists,
+                       remove the temporary searching
+                       message.
+                    */
+
+                    const assistantMessages =
+                        chat.querySelectorAll(
+                            ".message.assistant:not(.processing-message):not(#typingMessage)"
+                        );
+
+
+                    if (
+                        assistantMessages.length > 0
+                    ) {
+
+                        removeSearchingMessage();
+
+                    }
+
+
+                    /*
+                       Add Copy + Read Aloud buttons
+                       to assistant messages.
+                    */
+
+                    assistantMessages.forEach(
+                        function (message) {
+
+                            addActionButtons(
+                                message
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+
+        observer.observe(
+            chat,
+            {
+                childList: true,
+                subtree: true
+            }
+        );
+
+    }
+
+
+    /* INTERCEPT WEBSOCKET STATUS */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        function () {
+
+            observeChatStatus();
+
+            observeChatMessages();
+
+        }
+    );
+
+
+    /*
+       Make functions available for debugging
+       if needed.
+    */
+
+    window.RAG_CHAT_UI = {
+
+        showSearchingMessage:
+            showSearchingMessage,
+
+        removeSearchingMessage:
+            removeSearchingMessage,
+
+        addActionButtons:
+            addActionButtons
+
+    };
+
+})();
+
+</script>
+
+
+<!-- EXTRA CHAT UI STYLES -->
+
+<style>
+
+.message-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    margin-top: 6px;
+
+    margin-left: 4px;
+
+}
+
+
+.message-action-btn {
+
+    width: 34px;
+
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border: 1px solid rgba(120, 120, 120, 0.22);
+
+    border-radius: 9px;
+
+    background: transparent;
+
+    color: inherit;
+
+    cursor: pointer;
+
+    opacity: 0.72;
+
+    transition:
+        background 0.18s ease,
+        opacity 0.18s ease,
+        transform 0.18s ease;
+
+}
+
+
+.message-action-btn svg {
+
+    width: 17px;
+
+    height: 17px;
+
+}
+
+
+.message-action-btn:hover {
+
+    opacity: 1;
+
+    background: rgba(127, 127, 127, 0.10);
+
+}
+
+
+.message-action-btn:active {
+
+    transform: scale(0.94);
+
+}
+
+
+.message-action-btn.copied {
+
+    opacity: 1;
+
+}
+
+
+.message-action-btn.speaking {
+
+    opacity: 1;
+
+}
+
+
+.searching-bubble {
+
+    padding: 10px 14px;
+
+}
+
+
+.searching-content {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    font-size: 14px;
+
+    line-height: 1.4;
+
+}
+
+
+.searching-spinner {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 4px;
+
+}
+
+
+.searching-spinner span {
+
+    width: 5px;
+
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: currentColor;
+
+    opacity: 0.45;
+
+    animation: ragSearchingDot 1.2s infinite ease-in-out;
+
+}
+
+
+.searching-spinner span:nth-child(2) {
+
+    animation-delay: 0.15s;
+
+}
+
+
+.searching-spinner span:nth-child(3) {
+
+    animation-delay: 0.30s;
+
+}
+
+
+@keyframes ragSearchingDot {
+
+    0%,
+    60%,
+    100% {
+
+        transform: translateY(0);
+
+        opacity: 0.35;
+
+    }
+
+    30% {
+
+        transform: translateY(-4px);
+
+        opacity: 1;
+
+    }
+
+}
+
+
+.processing-message {
+
+    opacity: 0.92;
+
+}
+
+
+@media (max-width: 700px) {
+
+    .message-actions {
+
+        margin-top: 5px;
+
+    }
+
+    .message-action-btn {
+
+        width: 32px;
+
+        height: 32px;
+
+    }
+
+}
+
+</style>
+
 
 </body>
 

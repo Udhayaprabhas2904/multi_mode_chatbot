@@ -1,6 +1,11 @@
+import os
+
+from dotenv import load_dotenv
 from langchain_google_genai import ChatGoogleGenerativeAI
 
 from app.prompts.sales_prompt import SALES_SYSTEM_PROMPT
+
+load_dotenv()
 
 
 def sales_agent(query, context, chat_history=None):
@@ -10,15 +15,18 @@ def sales_agent(query, context, chat_history=None):
     Answers questions using only the retrieved sales documents.
     """
 
+    model_name = os.getenv(
+        "GEMINI_MODEL",
+        "gemini-3.5-flash-lite",
+    )
+
     llm = ChatGoogleGenerativeAI(
-        model="gemini-3.6-flash",
-        temperature=0.2,
+        model=model_name,
     )
 
     history_text = ""
 
     if chat_history:
-
         history_text = "\n".join(
             [
                 f"{message.get('role', 'user')}: "
@@ -49,8 +57,8 @@ Remember:
 - Use only the provided sales material.
 - Do not use tutor/education information.
 - Do not invent prices, products, policies, features, or procedures.
-- If the information is not available, clearly say that it is not
-  available in the uploaded sales documents.
+- If the information is not available, clearly say that it is
+  not available in the uploaded sales documents.
 """
 
     result = llm.invoke(prompt)
