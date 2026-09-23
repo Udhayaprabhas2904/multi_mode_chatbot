@@ -1,6 +1,3 @@
-Sure. Here is a **professional, emoji-free, single-block README.md** you can copy directly into your GitHub repository.
-
-````markdown
 # Multi-Mode RAG Chatbot
 
 A document-grounded Retrieval-Augmented Generation (RAG) chatbot built with LangGraph, FastAPI, Google Gemini, PostgreSQL, and pgvector. The system supports two specialized modes: Sales Assistant and AI Tutor, allowing users to upload PDF documents and interact with their content through context-aware conversations.
@@ -478,4 +475,4 @@ GitHub:
 This project is intended for educational and development purposes.
 
 ```
-```
+
